@@ -16,28 +16,28 @@ public class WeaponHit : MonoBehaviour
     }
 
     void Update(){
-        if (shouldHit){
-            foreach (var go in enemyList)
-            {
-                EnemyBehaiviour enemyB= go.GetComponent<EnemyBehaiviour>();
-                if (enemyB.hp-hitPointsPerHit*Time.deltaTime<=0) enemyList.Remove(go);
-                enemyB.hitEnemy(hitPointsPerHit * Time.deltaTime);
-            }
+        // if (shouldHit){
+        //     foreach (var go in enemyList)
+        //     {
+        //         EnemyBehaiviour enemyB= go.GetComponent<EnemyBehaiviour>();
+        //         if (enemyB.hp-hitPointsPerHit*Time.deltaTime<=0) enemyList.Remove(go);
+        //         enemyB.hitEnemy(hitPointsPerHit * Time.deltaTime);
+        //     }
 
-            // shouldHit=false;
-            // Invoke("setShouldHitTrue", 1);
-        }
+        //     // shouldHit=false;
+        //     // Invoke("setShouldHitTrue", 1);
+        // }
     }
 
-    void OnTriggerEnter2D(Collider2D col){
+    // void OnTriggerEnter2D(Collider2D col){
 
-        if (col.gameObject.tag=="Enemy")
-            enemyList.Add(col.gameObject);
-    }
+    //     if (col.gameObject.tag=="Enemy")
+    //         enemyList.Add(col.gameObject);
+    // }
 
-    void OnTriggerExit2D(Collider2D col){
-        if (col.gameObject.tag=="Enemy")
-            enemyList.Remove(col.gameObject);
-    }
+    // void OnTriggerExit2D(Collider2D col){
+    //     if (col.gameObject.tag=="Enemy")
+    //         enemyList.Remove(col.gameObject);
+    // }
     
 }

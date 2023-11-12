@@ -1,3 +1,5 @@
+using System;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class EnemyBehaiviour : MonoBehaviour
@@ -6,14 +8,15 @@ public class EnemyBehaiviour : MonoBehaviour
 
     // public float lifePerSecond = 0.5f;
     public float hp=10;
-    // public float maxHp=15;
-    // public float maxScale = 5;
-    // public float minScale = 1;
+    public float minimumHp = 1;
+    
+    public float experienceByDeath=1;
+
     private Transform jugador; // Referencia al jugador
 
     public void hitEnemy(float ammount){
-        hp-=ammount;
-        Debug.Log(ammount);
+        if (minimumHp<=hp)
+            hp-=ammount;
     }
 
     // void addLife(){
@@ -30,25 +33,38 @@ public class EnemyBehaiviour : MonoBehaviour
 
     void Update()
     {
-
-        if (hp<=0){
-            Destroy(this.gameObject);
-        }
-
-        // hp+=lifePerSecond * Time.deltaTime;
-
         float scale = hp;
-
 
         transform.localScale = new Vector3(scale, scale);
         
         if (jugador != null)
         {
-            // Calcular la dirección hacia el jugador
-            Vector3 direccion = (jugador.position - transform.position).normalized;
+            Vector3 direccion;
 
-            // Mover al enemigo hacia el jugador
+            if (hp<=minimumHp)
+                direccion = (-jugador.position + transform.position).normalized;
+            else 
+                direccion = (jugador.position - transform.position).normalized;           
+            
+            // Mover al enemigo hacia el jugador o alejarlo del jugador 
             transform.Translate(direccion * velocidad * Time.deltaTime);
         }
+    }
+
+    void OnTriggerEnter2D(Collider2D col){
+        if (col.gameObject.tag=="Player" && hp<=minimumHp){
+            GameController.gameController.addExperience(experienceByDeath);
+            Destroy(this.gameObject);
+        }
+
+        
+    }
+
+    void OnTriggerStay2D(Collider2D col){
+        Debug.Log(GameController.gameController.weaponDamage);
+        
+
+        if (col.gameObject.tag=="Weapon")
+            this.hitEnemy(GameController.gameController.weaponDamage * Time.deltaTime);
     }
 }

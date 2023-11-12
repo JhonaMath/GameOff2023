@@ -101,11 +101,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   velocidad: 3
-  lifePerSecond: 0.5
-  hp: 2
-  maxHp: 100
-  maxScale: 5
-  minScale: 1
+  hp: 4
+  minimumHp: 2
 --- !u!50 &7874382274603380960
 Rigidbody2D:
   serializedVersion: 4
