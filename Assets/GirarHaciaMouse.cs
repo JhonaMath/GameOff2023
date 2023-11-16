@@ -15,7 +15,7 @@ public class GirarHaciaMouse : MonoBehaviour
         Vector3 mousePos = Input.mousePosition;
         mousePos = Camera.main.ScreenToWorldPoint(mousePos);
         mousePos.z = 0;
-        transformObj.position = mousePos;
+        // transformObj.position = mousePos;
 
         // Calcula la dirección hacia la posición del mouse
         Vector3 direccion = mousePos - transform.position;
