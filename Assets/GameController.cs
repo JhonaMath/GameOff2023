@@ -12,11 +12,12 @@ public class GameController : MonoBehaviour
 
     //UI
     public Text timerText;
+    public Text lvlText;
 
     float time=0;
 
     // Enemy Prefabs
-    public GameObject enemy1Prefab;
+    public GameObject enemy1Prefab; 
 
 
     //Weapons
@@ -26,6 +27,8 @@ public class GameController : MonoBehaviour
     public GameObject manaBar;
     private Image manaBarReal;
 
+
+
     public GameObject stick;
     private float stickCD = 0.0f;
 
@@ -34,6 +37,9 @@ public class GameController : MonoBehaviour
     
     public float experience=0;
     public float experienceNextLevel = 10;
+
+    public GameObject expBar;
+    private Image expBarReal;
     [SerializeField] private float nextLevelFactor=1.2f;
 
     public List<SpawnAreaController> spawnAreaControllers;
@@ -105,6 +111,8 @@ public class GameController : MonoBehaviour
         // InvokeRepeating("CreateEnemy", 1, 1);
 
         manaBarReal=manaBar.GetComponent<Image>();
+        
+        expBarReal= expBar.GetComponent<Image>();
 
     }
 
@@ -116,6 +124,8 @@ public class GameController : MonoBehaviour
         if (fov.activeSelf && fovRemainTime<=0) stopUsingFov();
 
         manaBarReal.fillAmount=fovRemainTime/maxRemaininTime;
+        expBarReal.fillAmount=experience/experienceNextLevel;
+        lvlText.text="Lvl. " + currentLevel;
         
     }
 }
