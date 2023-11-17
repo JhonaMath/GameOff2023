@@ -85,8 +85,6 @@ public class EnemyBehaiviour : MonoBehaviour
     }
 
     void OnTriggerStay2D(Collider2D col){
-        Debug.Log(GameController.gameController.weaponDamage);
-        
 
         if (col.gameObject.tag=="Weapon")
             this.hitEnemy(GameController.gameController.weaponDamage * Time.deltaTime);

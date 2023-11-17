@@ -2,16 +2,23 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
+
 
 public class MovePlayer : MonoBehaviour
 {
     
     [SerializeField] private FieldOfView fieldOfView;
 
+
+
     SpriteRenderer sprite;
     public Transform weapon;
 
-    public float life;
+    public float life=10;
+    public float maxLife = 10;
+    public GameObject healthBar;
+    private Image healthBarReal;
 
     public float velocidad = 5.0f; // Velocidad de movimiento ajustable
 
@@ -22,6 +29,8 @@ public class MovePlayer : MonoBehaviour
         sprite=GetComponent<SpriteRenderer>();
         // weapon=GetComponentInChildren<Transform>();
         animator=GetComponent<Animator>();
+
+        healthBarReal=healthBar.GetComponent<Image>();
 
 
     }
@@ -44,8 +53,6 @@ public class MovePlayer : MonoBehaviour
         transform.Translate(movimiento * velocidad * Time.deltaTime);
 
 
-        Debug.Log("MOVIMIENTO HOR: " + movimientoHorizontal);
-
         if (movimientoHorizontal>0) {
             sprite.flipX=false;
             weapon.localPosition=new Vector3(0.065f,weapon.localPosition.y);
@@ -55,7 +62,6 @@ public class MovePlayer : MonoBehaviour
         if (movimientoHorizontal<0) {
             sprite.flipX=true;
             weapon.localPosition=new Vector3(-0.065f,weapon.localPosition.y);
-
         }
 
 
@@ -70,6 +76,16 @@ public class MovePlayer : MonoBehaviour
         Vector3 posicionMouse = Input.mousePosition;
         Vector3 aimDir = (posicionMouse);
 
+        healthBarReal.fillAmount=life/maxLife;
 
+    }
+
+    void OnTriggerStay2D(Collider2D col){
+            Debug.Log("TE PEGUE PUTOOOOO");
+
+        if (col.gameObject.tag == "Enemy"){
+            life-=1*Time.deltaTime;
+
+        }
     }
 }

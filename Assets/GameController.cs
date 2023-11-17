@@ -2,12 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.UIElements.Experimental;
 
 public class GameController : MonoBehaviour
 {
 
     public static GameController gameController;
+
+    //UI
+    public Text timerText;
+
+    float time=0;
+
     // Enemy Prefabs
     public GameObject enemy1Prefab;
 
@@ -15,6 +22,9 @@ public class GameController : MonoBehaviour
     //Weapons
     public GameObject fov;
     private float fovRemainTime = 10.0f;
+    private float maxRemaininTime = 10.0f;
+    public GameObject manaBar;
+    private Image manaBarReal;
 
     public GameObject stick;
     private float stickCD = 0.0f;
@@ -33,8 +43,12 @@ public class GameController : MonoBehaviour
     //Se ejecuta cada instante de tiempo para hacer distintas cosas
     void timer(){
         if (stickCD>0) stickCD-=Time.deltaTime;
-        if (fovRemainTime<10 && !fov.activeSelf) fovRemainTime+=Time.deltaTime;
+        if (fovRemainTime<maxRemaininTime && !fov.activeSelf) fovRemainTime+=Time.deltaTime;
         else if (fov.activeSelf) fovRemainTime-=Time.deltaTime;
+
+        time+=Time.deltaTime;
+        timerText.text= "" + ((int)time/60).ToString("00") + ":" + ((int)time%60).ToString("00");
+
     }
 
     void CreateEnemy(){
@@ -90,6 +104,8 @@ public class GameController : MonoBehaviour
         InvokeRepeating("CreateEnemy", 1, 2);
         // InvokeRepeating("CreateEnemy", 1, 1);
 
+        manaBarReal=manaBar.GetComponent<Image>();
+
     }
 
     // Update is called once per frame
@@ -98,6 +114,8 @@ public class GameController : MonoBehaviour
         timer();
 
         if (fov.activeSelf && fovRemainTime<=0) stopUsingFov();
-        Debug.Log(nextLevelFactor);
+
+        manaBarReal.fillAmount=fovRemainTime/maxRemaininTime;
+        
     }
 }
