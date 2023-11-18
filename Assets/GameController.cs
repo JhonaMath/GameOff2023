@@ -116,7 +116,7 @@ public class GameController : MonoBehaviour
 
     }
 
-    // Update is called once per frame
+    // Update is called once per 55
     void Update()
     {
         timer();
