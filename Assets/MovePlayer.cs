@@ -70,7 +70,6 @@ public class MovePlayer : MonoBehaviour
 
         if (Input.GetMouseButtonDown(1)){ 
             GameController.gameController.useStick();
-            Debug.Log("SecondButton");
         }
     
         Vector3 posicionMouse = Input.mousePosition;

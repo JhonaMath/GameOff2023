@@ -28,9 +28,11 @@ public class GameController : MonoBehaviour
     private Image manaBarReal;
 
 
+    private float expansionWeaponCD = 0.0f;
+    public Animator expansionAnimator;
+    public GameObject expansionWeapon;
 
-    public GameObject stick;
-    private float stickCD = 0.0f;
+
 
 
     public float weaponDamage=2;
@@ -48,7 +50,7 @@ public class GameController : MonoBehaviour
 
     //Se ejecuta cada instante de tiempo para hacer distintas cosas
     void timer(){
-        if (stickCD>0) stickCD-=Time.deltaTime;
+        if (expansionWeaponCD>0) expansionWeaponCD-=Time.deltaTime;
         if (fovRemainTime<maxRemaininTime && !fov.activeSelf) fovRemainTime+=Time.deltaTime;
         else if (fov.activeSelf) fovRemainTime-=Time.deltaTime;
 
@@ -65,14 +67,15 @@ public class GameController : MonoBehaviour
             spawnAreaControllers[spanwSel].SpawnEnemy(enemy1Prefab);
     }
 
-    void deactiveStick(){
-        stick.SetActive(false);
+    void deactiveExpansionWeapon(){
+        expansionWeapon.SetActive(false);
     }
     public void useStick(){
-        if (stickCD<=0 && fov != null){
-            stick.SetActive(true);
-            stickCD=3;
-            Invoke("deactiveStick", 0.2f);
+        if (expansionWeaponCD<=0 && fov != null){
+            expansionWeapon.SetActive(true);
+            expansionWeaponCD=3;
+            Invoke("deactiveExpansionWeapon", 0.4f);
+            expansionAnimator.SetTrigger("cast_expansion");
         }
     }
 
