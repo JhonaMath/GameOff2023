@@ -252,7 +252,7 @@ public class GameController : MonoBehaviour
         lvlStats[0].rangeExplosion = 200;
         lvlStats[0].strExplosion = 8;
         lvlStats[0].cdExplosion = 10;
-        lvlStats[0].costExplosion = 2;
+        lvlStats[0].costExplosion = 1.5f;
         lvlStats[0].expMultiplier = 1;
         lvlStats[0].weaponCost = 0.5f;
 
