@@ -24,10 +24,6 @@ public struct PlayerStats{
     public float expMultiplier;
 }
 
-
-
-
-
 public class GameController : MonoBehaviour
 {
 
@@ -35,13 +31,13 @@ public class GameController : MonoBehaviour
     public PlayerStats playerStats;
     PlayerStats playerStatsLvl;
     
-    PlayerStats[] lvlStats = new PlayerStats[10];
+    PlayerStats[] lvlStats = new PlayerStats[5];
     
     public MovePlayer playerMove;
 
     public static GameController gameController;
 
-    //UI
+    #region UI
     public Text timerText;
     public Text lvlText;
 
@@ -50,6 +46,10 @@ public class GameController : MonoBehaviour
     public Image cdExplosionUI;
 
     public GameObject pauseUI;
+
+    public GameObject gameOverUI;
+
+    #endregion
 
 
     float time=0;
@@ -92,7 +92,7 @@ public class GameController : MonoBehaviour
         expBarReal= expBar.GetComponent<Image>();
 
         //Initial Lvls
-        playerStatsLvl.life = 0;
+        playerStatsLvl.life = 3;
         playerStatsLvl.regLife = 0;
         playerStatsLvl.mana = 0;
         playerStatsLvl.regMana = 0;
@@ -213,8 +213,6 @@ public class GameController : MonoBehaviour
         }
     }
 
-
-
     public void useFov(){
         if (mana>0.1 && fov != null){
             fov.SetActive(true);
@@ -315,7 +313,11 @@ public class GameController : MonoBehaviour
         lvlStats[4].costExplosion = 0.5f;
         lvlStats[4].expMultiplier = 2f;
         lvlStats[4].weaponCost = 0.1f;
+    }
 
+    void GameOver(){
+        //TODO: GAME OVER LOGIC
         
+        gameOverUI.SetActive(true);
     }
 }
