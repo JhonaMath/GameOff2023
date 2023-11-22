@@ -13,7 +13,7 @@ public class CursorBehaiviour : MonoBehaviour
 
     Vector3 initialScale;
 float velocidad = 1.0f;
-float amplitud = 0.1f;
+float amplitud = 0.03f;
 
     float acumulatorDeg = 0;
     void Start()

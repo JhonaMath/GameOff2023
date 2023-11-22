@@ -15,12 +15,14 @@ public class MovePlayer : MonoBehaviour
     SpriteRenderer sprite;
     public Transform weapon;
 
-    public float life=10;
-    public float maxLife = 10;
+    public float life=10; //Setted from GameController
+    public float maxLife = 10; //Setted from GameController
+
+    public float regLife = 0.1f; //Setted from GameController 
     public GameObject healthBar;
     private Image healthBarReal;
 
-    public float velocidad = 5.0f; // Velocidad de movimiento ajustable
+    public float velocidad; //Setted from GameController
 
     Animator animator;
     
@@ -32,25 +34,26 @@ public class MovePlayer : MonoBehaviour
 
         healthBarReal=healthBar.GetComponent<Image>();
 
-
     }
 
+    // void FixedUpdate(){
 
+    // }
     void Update()
     {
         // Verificar la entrada del jugador 
-        float movimientoHorizontal = Input.GetAxis("Horizontal");
-        float movimientoVertical = Input.GetAxis("Vertical");
+        float movimientoHorizontal = Input.GetAxisRaw("Horizontal");
+        float movimientoVertical = Input.GetAxisRaw("Vertical");
 
             
         if (movimientoHorizontal != 0 || movimientoVertical!=0) animator.SetBool("is_mooving", true);
         else animator.SetBool("is_mooving", false);
 
-        // Calcular la dirección de movimiento
+            // Calcular la dirección de movimiento
         Vector3 movimiento = new Vector3(movimientoHorizontal, movimientoVertical, 0.0f);
 
         // Aplicar el movimiento al objeto
-        transform.Translate(movimiento * velocidad * Time.deltaTime);
+        transform.Translate(movimiento.normalized * velocidad * Time.deltaTime);
 
 
         if (movimientoHorizontal>0) {
@@ -75,6 +78,10 @@ public class MovePlayer : MonoBehaviour
         Vector3 posicionMouse = Input.mousePosition;
         Vector3 aimDir = (posicionMouse);
 
+
+        if (life<maxLife)
+            life+=regLife*Time.deltaTime;
+
         healthBarReal.fillAmount=life/maxLife;
 
     }
@@ -83,7 +90,7 @@ public class MovePlayer : MonoBehaviour
             Debug.Log("TE PEGUE PUTOOOOO");
 
         if (col.gameObject.tag == "Enemy"){
-            life-=1*Time.deltaTime;
+            life-=1*Time.deltaTime; //TODO: Agregar el daño del enemigo aca
 
         }
     }

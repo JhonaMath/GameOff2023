@@ -21,7 +21,7 @@ public class StickHit : MonoBehaviour
     void OnTriggerEnter2D(Collider2D col){
         if (col.gameObject.tag=="Enemy"){
             Rigidbody2D rb = col.gameObject.GetComponent<Rigidbody2D>();
-            rb.AddForce((-transform.position + col.transform.position).normalized * 10f,ForceMode2D.Impulse);
+            rb.AddForce((-transform.position + col.transform.position).normalized * GameController.gameController.playerStats.strExplosion,ForceMode2D.Impulse);
         }
     }
 }
