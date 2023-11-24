@@ -20,10 +20,16 @@ public struct PlayerStats{
     public float rangeExplosion;
     public float strExplosion;
     public float cdExplosion;
-    public float costExplosion;
     public float expMultiplier;
 }
 
+public struct CardData{
+    int type;
+    string title;
+    string description;
+
+
+}
 public class GameController : MonoBehaviour
 {
 
@@ -49,6 +55,8 @@ public class GameController : MonoBehaviour
 
     public GameObject gameOverUI;
 
+    public GameObject lvlUpUI;
+
     #endregion
 
 
@@ -70,7 +78,7 @@ public class GameController : MonoBehaviour
     public GameObject expansionWeapon;
     
     public float experience=0;
-    public float experienceNextLevel = 10;
+    public float experienceNextLevel = 2;
 
     public GameObject expBar;
     private Image expBarReal;
@@ -78,6 +86,17 @@ public class GameController : MonoBehaviour
 
     public List<SpawnAreaController> spawnAreaControllers;
     public int currentLevel=1;
+
+    //Cards
+    int Card1Type=0;
+    int Card2Type=0;
+
+    public Text Card1Title;
+    public Text Card1Description;
+
+    public Text Card2Title;
+    public Text Card2Description;
+
 
 
        void Start()
@@ -92,7 +111,7 @@ public class GameController : MonoBehaviour
         expBarReal= expBar.GetComponent<Image>();
 
         //Initial Lvls
-        playerStatsLvl.life = 3;
+        playerStatsLvl.life = 0;
         playerStatsLvl.regLife = 0;
         playerStatsLvl.mana = 0;
         playerStatsLvl.regMana = 0;
@@ -102,7 +121,6 @@ public class GameController : MonoBehaviour
         playerStatsLvl.rangeExplosion = 0;
         playerStatsLvl.strExplosion = 0;
         playerStatsLvl.cdExplosion = 0;
-        playerStatsLvl.costExplosion = 0;
         playerStatsLvl.expMultiplier = 0;
         playerStatsLvl.weaponCost = 0;
 
@@ -121,7 +139,7 @@ public class GameController : MonoBehaviour
         debugText.text="Life:" + playerStats.life + "\nRegLife: " + playerStats.regLife + "\nMana: " + playerStats.mana + 
         "\nRegMana: " + playerStats.regMana + "\nVel: " + playerStats.velocity + 
         "\nRangeExp: " + playerStats.rangeExplosion + "\nRangeCone: " + playerStats.rangeWeapon + "\nDmg: " + playerStats.dmgWeapon + 
-        "\nStrExplosion: " + playerStats.strExplosion + "\nCdExplosion: " + playerStats.cdExplosion + "\nCostExplosion: " + playerStats.costExplosion + 
+        "\nStrExplosion: " + playerStats.strExplosion + "\nCdExplosion: " + playerStats.cdExplosion + 
         "\nExpMultiplier: " + playerStats.expMultiplier + "\n";
 
         timer();
@@ -162,18 +180,17 @@ public class GameController : MonoBehaviour
     void updatePlayerStats(){
 
         playerStats.life = lvlStats[(int)playerStatsLvl.life].life;
-        playerStats.regLife = lvlStats[(int)playerStats.regLife].regLife;
-        playerStats.mana = lvlStats[(int)playerStats.mana].mana;
-        playerStats.regMana = lvlStats[(int)playerStats.regMana].regMana;
-        playerStats.velocity = lvlStats[(int)playerStats.velocity ].velocity;
-        playerStats.rangeWeapon = lvlStats[(int)playerStats.rangeWeapon].rangeWeapon;
-        playerStats.dmgWeapon = lvlStats[(int)playerStats.dmgWeapon].dmgWeapon;
-        playerStats.rangeExplosion = lvlStats[(int)playerStats.rangeExplosion].rangeExplosion;
-        playerStats.strExplosion = lvlStats[(int)playerStats.strExplosion].strExplosion;
-        playerStats.cdExplosion = lvlStats[(int)playerStats.cdExplosion].cdExplosion;
-        playerStats.costExplosion = lvlStats[(int)playerStats.costExplosion].costExplosion;
-        playerStats.expMultiplier = lvlStats[(int)playerStats.expMultiplier ].expMultiplier;
-        playerStats.weaponCost = lvlStats[(int)playerStats.weaponCost].weaponCost;
+        playerStats.regLife = lvlStats[(int)playerStatsLvl.regLife].regLife;
+        playerStats.mana = lvlStats[(int)playerStatsLvl.mana].mana;
+        playerStats.regMana = lvlStats[(int)playerStatsLvl.regMana].regMana;
+        playerStats.velocity = lvlStats[(int)playerStatsLvl.velocity ].velocity;
+        playerStats.rangeWeapon = lvlStats[(int)playerStatsLvl.rangeWeapon].rangeWeapon;
+        playerStats.dmgWeapon = lvlStats[(int)playerStatsLvl.dmgWeapon].dmgWeapon;
+        playerStats.rangeExplosion = lvlStats[(int)playerStatsLvl.rangeExplosion].rangeExplosion;
+        playerStats.strExplosion = lvlStats[(int)playerStatsLvl.strExplosion].strExplosion;
+        playerStats.cdExplosion = lvlStats[(int)playerStatsLvl.cdExplosion].cdExplosion;
+        playerStats.expMultiplier = lvlStats[(int)playerStatsLvl.expMultiplier ].expMultiplier;
+        playerStats.weaponCost = lvlStats[(int)playerStatsLvl.weaponCost].weaponCost;
 
 
 
@@ -204,10 +221,9 @@ public class GameController : MonoBehaviour
         expansionWeapon.SetActive(false);
     }
     public void useStick(){
-        if (expansionWeaponCD<=0 && mana>=playerStats.costExplosion && fov != null){
+        if (expansionWeaponCD<=0 && fov != null){
             expansionWeapon.SetActive(true);
             expansionWeaponCD=playerStats.cdExplosion;
-            mana-=playerStats.costExplosion;
             Invoke("deactiveExpansionWeapon", 0.4f);
             expansionAnimator.SetTrigger("cast_expansion");
         }
@@ -230,12 +246,35 @@ public class GameController : MonoBehaviour
         if (experienceNextLevel<=experience){
             //TODO: LevelUp Animation
 
-            Debug.Log("LEVEL UP!");
+            levelUp();
 
             currentLevel++;
             experience=0;
             experienceNextLevel = experienceNextLevel*nextLevelFactor;
+
+            lvlUpUI.SetActive(true);
+            Time.timeScale=0;
+
         }
+    }
+
+    public void levelUp(){
+        do{
+            Card1Type = Random.Range(0,11);
+        }while(getStatLvlByType(Card1Type)==4);
+
+        int attempt=0;
+        do{
+            Card2Type = Random.Range(0,11);
+            attempt++;
+        }while((getStatLvlByType(Card2Type)==4 || Card2Type==Card1Type) && attempt<=10);
+
+        Card1Title.text=getCardTitle(Card1Type);
+        Card1Description.text=getCardDescription(Card1Type);
+
+        Card2Title.text=getCardTitle(Card2Type);
+        Card2Description.text=getCardDescription(Card2Type);
+    
     }
 
     void initializeLvlPlayerStats(){
@@ -250,7 +289,6 @@ public class GameController : MonoBehaviour
         lvlStats[0].rangeExplosion = 200;
         lvlStats[0].strExplosion = 8;
         lvlStats[0].cdExplosion = 10;
-        lvlStats[0].costExplosion = 1.5f;
         lvlStats[0].expMultiplier = 1;
         lvlStats[0].weaponCost = 0.5f;
 
@@ -261,11 +299,10 @@ public class GameController : MonoBehaviour
         lvlStats[1].regMana = 0.2f;
         lvlStats[1].velocity = 3.5f;
         lvlStats[1].rangeWeapon = 1;//TODO: Arreglar esto
-        lvlStats[1].dmgWeapon = 2.2f;
+        lvlStats[1].dmgWeapon = 2.5f;
         lvlStats[1].rangeExplosion = 220;
         lvlStats[1].strExplosion = 8.5f;
         lvlStats[1].cdExplosion = 7;
-        lvlStats[1].costExplosion = 1.6f;
         lvlStats[1].expMultiplier = 1.2f;
         lvlStats[1].weaponCost = 0.4f;
 
@@ -276,11 +313,10 @@ public class GameController : MonoBehaviour
         lvlStats[2].regMana = 0.3f;
         lvlStats[2].velocity = 4;
         lvlStats[2].rangeWeapon = 1; //TODO: Arreglar esto
-        lvlStats[2].dmgWeapon = 2.5f;
+        lvlStats[2].dmgWeapon = 3f;
         lvlStats[2].rangeExplosion = 240;
         lvlStats[2].strExplosion = 9f;
         lvlStats[2].cdExplosion = 6;
-        lvlStats[2].costExplosion = 1.1f;
         lvlStats[2].expMultiplier = 1.4f;
         lvlStats[2].weaponCost = 0.3f;
 
@@ -291,11 +327,10 @@ public class GameController : MonoBehaviour
         lvlStats[3].regMana = 0.35f;
         lvlStats[3].velocity = 4.5f;
         lvlStats[3].rangeWeapon = 1; //TODO: Arreglar esto
-        lvlStats[3].dmgWeapon = 2.7f;
+        lvlStats[3].dmgWeapon = 3.5f;
         lvlStats[3].rangeExplosion = 260;
         lvlStats[3].strExplosion = 9.3f;
         lvlStats[3].cdExplosion = 5;
-        lvlStats[3].costExplosion = 0.9f;
         lvlStats[3].expMultiplier = 1.6f;
         lvlStats[3].weaponCost = 0.2f;
 
@@ -306,18 +341,209 @@ public class GameController : MonoBehaviour
         lvlStats[4].regMana = 0.5f;
         lvlStats[4].velocity = 5f;
         lvlStats[4].rangeWeapon = 1; //TODO: Arreglar esto
-        lvlStats[4].dmgWeapon = 3f;
+        lvlStats[4].dmgWeapon = 4f;
         lvlStats[4].rangeExplosion = 280;
         lvlStats[4].strExplosion = 10f;
         lvlStats[4].cdExplosion = 3;
-        lvlStats[4].costExplosion = 0.5f;
         lvlStats[4].expMultiplier = 2f;
         lvlStats[4].weaponCost = 0.1f;
     }
 
-    void GameOver(){
+    public void GameOver(){
         //TODO: GAME OVER LOGIC
-        
+
         gameOverUI.SetActive(true);
     }
+
+    string getCardTitle(int type){ 
+        
+        switch (type){
+            case 0:
+                return "Life++";
+            break;
+           case 1:
+                return "Reg.Life++";
+            break;
+            case 2:
+                return "Mana++";
+            break;
+            case 3:
+                return "Reg.Mana++";
+            break;
+            case 4:
+                return "Vel++";
+            break;
+            case 5:
+                return "Range Magic++";
+            break;
+            case 6:
+                return "Magic Power++"; //dmgWeapon
+            break;
+            case 7:
+                return "Range Explosion++";
+            break;
+            case 8:
+                return "CD Explosion--";
+            break;
+            case 9:
+                return "Str Explosion++";
+            break;
+            case 10:
+                return "Experience Multiplier";
+            break;
+            case 11:
+                return "Magic Cost--";
+            break;
+        }
+
+
+        return "";
+    }
+
+    //The playerStatsLvl should be less than 5 the maximum.
+    string getCardDescription(int type){ 
+        
+        switch (type){
+            case 0:
+                return "Life: \n+" + (lvlStats[(int)playerStatsLvl.life+1].life - playerStats.life);
+            break;
+           case 1:
+                return "Reg.Life: \n+" + (lvlStats[(int)playerStatsLvl.regLife+1].regLife - playerStats.regLife);
+            break;
+            case 2:
+                return "Mana: \n+" + (lvlStats[(int)playerStatsLvl.mana+1].mana - playerStats.mana);
+            break;
+            case 3:
+                return "Reg.Mana: \n+" + (lvlStats[(int)playerStatsLvl.regMana+1].regMana - playerStats.regMana);;
+            break;
+            case 4:
+                return "Velocity: \n+" + (lvlStats[(int)playerStatsLvl.velocity+1].velocity - playerStats.velocity);
+            break;
+            case 5:
+                return "Range Magic: \n+" + (lvlStats[(int)playerStatsLvl.rangeWeapon+1].rangeWeapon - playerStats.rangeWeapon);
+            break;
+            case 6:
+                return "Magic Power: \n+" + (lvlStats[(int)playerStatsLvl.dmgWeapon+1].dmgWeapon - playerStats.dmgWeapon);
+            break;
+            case 7:
+                return "Range Explosion: \n+" + (lvlStats[(int)playerStatsLvl.rangeExplosion+1].rangeExplosion - playerStats.rangeExplosion);
+            break;
+            case 8:
+                return "CD Explosion: \n-" + (playerStats.cdExplosion-lvlStats[(int)playerStatsLvl.cdExplosion+1].cdExplosion);
+            break;
+            case 9:
+                return "Str Explosion: \n+" + (lvlStats[(int)playerStatsLvl.velocity+1].velocity - playerStats.velocity);
+            break;
+            case 10:
+                return "Experience Multiplier: \n+" + (lvlStats[(int)playerStatsLvl.velocity+1].velocity - playerStats.velocity);
+            break;
+            break;
+            case 11:
+                return "Magic Cost: \n-" + (playerStats.weaponCost-lvlStats[(int)playerStatsLvl.weaponCost+1].weaponCost);
+            break;
+        }
+
+
+        return "";
+    }
+
+    float getStatLvlByType(int type){ 
+        
+        switch (type){
+            case 0:
+                return playerStatsLvl.life;
+            break;
+           case 1:
+                return playerStatsLvl.regLife;
+            break;
+            case 2:
+                return playerStatsLvl.mana;
+            break;
+            case 3:
+                return playerStatsLvl.regMana;
+            break;
+            case 4:
+                return playerStatsLvl.velocity;
+            break;
+            case 5:
+                return playerStatsLvl.rangeWeapon;
+            break;
+            case 6:
+                return playerStatsLvl.dmgWeapon;
+            break;
+            case 7:
+                return playerStatsLvl.rangeExplosion;
+            break;
+            case 8:
+                return playerStatsLvl.cdExplosion;
+            break;
+            case 9:
+                return playerStatsLvl.strExplosion;
+            break;
+            case 10:
+                return playerStatsLvl.expMultiplier;
+            break;
+            case 11:
+                return playerStatsLvl.weaponCost;
+            break;
+        }
+
+
+        return -1;
+    }
+
+    public void selectCard(int cardNum){
+        if (cardNum==1)
+            statUpByType(Card1Type);
+        else
+            statUpByType(Card2Type);
+    }
+    void statUpByType(int type){
+        switch (type){
+            case 0:
+                playerStatsLvl.life++;
+            break;
+           case 1:
+                playerStatsLvl.regLife++;
+            break;
+            case 2:
+                playerStatsLvl.mana++;
+            break;
+            case 3:
+                playerStatsLvl.regMana++;
+            break;
+            case 4:
+                playerStatsLvl.velocity++;
+            break;
+            case 5:
+                playerStatsLvl.rangeWeapon++;
+            break;
+            case 6:
+                playerStatsLvl.dmgWeapon++;
+            break;
+            case 7:
+                playerStatsLvl.rangeExplosion++;
+            break;
+            case 8:
+                playerStatsLvl.cdExplosion++;
+            break;
+            case 9:
+                playerStatsLvl.strExplosion++;
+            break;
+            case 10:
+                playerStatsLvl.expMultiplier++;
+            break;
+            case 11:
+                playerStatsLvl.weaponCost++;
+            break;
+        }
+    
+        updatePlayerStats();
+
+        lvlUpUI.SetActive(false);
+        Time.timeScale=1;
+    
+    }
+
+
 }

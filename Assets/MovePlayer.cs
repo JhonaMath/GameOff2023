@@ -10,7 +10,13 @@ public class MovePlayer : MonoBehaviour
     
     [SerializeField] private FieldOfView fieldOfView;
 
+    public AudioClip stepSound;
+    AudioSource audioSource;
+    bool canReproduceStep = true;
 
+    void setCanReproduceStep(){
+        canReproduceStep=true;
+    }
 
     SpriteRenderer sprite;
     public Transform weapon;
@@ -34,6 +40,8 @@ public class MovePlayer : MonoBehaviour
 
         healthBarReal=healthBar.GetComponent<Image>();
 
+        audioSource= GetComponent<AudioSource>();
+
     }
 
     // void FixedUpdate(){
@@ -46,7 +54,14 @@ public class MovePlayer : MonoBehaviour
         float movimientoVertical = Input.GetAxisRaw("Vertical");
 
             
-        if (movimientoHorizontal != 0 || movimientoVertical!=0) animator.SetBool("is_mooving", true);
+        if (movimientoHorizontal != 0 || movimientoVertical!=0) {
+            animator.SetBool("is_mooving", true);
+            if (!audioSource.isPlaying &&  canReproduceStep && stepSound!=null ){
+                canReproduceStep=false;
+                Invoke("setCanReproduceStep", 0.5f); //Delay for sounds
+                audioSource.PlayOneShot(stepSound);
+                }
+        }
         else animator.SetBool("is_mooving", false);
 
             // Calcular la dirección de movimiento
@@ -79,10 +94,20 @@ public class MovePlayer : MonoBehaviour
         Vector3 aimDir = (posicionMouse);
 
 
+        //Evaluar si mori
+        if (life<=0) {
+            GameController.gameController.GameOver();
+            //Loose effect music
+            if (transform.localScale.x>0)
+                transform.localScale -= Vector3.one * 0.5f * Time.deltaTime;
+        }
+
         if (life<maxLife)
             life+=regLife*Time.deltaTime;
 
         healthBarReal.fillAmount=life/maxLife;
+
+        
 
     }
 
