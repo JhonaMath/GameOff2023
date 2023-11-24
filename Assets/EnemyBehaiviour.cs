@@ -16,12 +16,17 @@ public class EnemyBehaiviour : MonoBehaviour
 
     private Transform jugador; // Referencia al jugador\
 
+    AudioSource audioSource;
+    public AudioClip dieSoundEffect;
 
+    bool isDead = false;
 
     bool isStuned = false;
 
     Rigidbody2D rb;
     SpriteRenderer sprite;
+
+    public SpriteRenderer bloodSprite;
 
     public void hitEnemy(float ammount){
         if (minimumHp<=hp){
@@ -42,6 +47,8 @@ public class EnemyBehaiviour : MonoBehaviour
         rb = this.GetComponent<Rigidbody2D>();
 
         sprite= this.GetComponentsInChildren<SpriteRenderer>()[0];
+
+        audioSource = GetComponent<AudioSource>();
         
         // InvokeRepeating("addLife", 0.5f, 0.5f);
     }
@@ -51,8 +58,13 @@ public class EnemyBehaiviour : MonoBehaviour
         // float scale = hp;
 
         // transform.localScale = new Vector3(scale, scale);
+
+        if (bloodSprite.enabled) {
+            bloodSprite.color -= new Color(0,0,0,1*Time.deltaTime);
+            sprite.color -= new  Color(0,0,0,1*Time.deltaTime);
+        }
         
-        if (jugador != null && !isStuned)
+        if (jugador != null && !isStuned && !isDead)
         {
             Vector2 direccion;
 
@@ -75,10 +87,25 @@ public class EnemyBehaiviour : MonoBehaviour
         }
     }
 
+    void dieEffect(){
+        audioSource.PlayOneShot(dieSoundEffect);
+
+        transform.localScale=new Vector3(transform.localScale.x, transform.localScale.y * 0.3f);
+
+        isDead=true;
+        BoxCollider2D boxCol=GetComponent<BoxCollider2D>();
+        boxCol.enabled=false;
+        bloodSprite.enabled=true;
+
+
+        Destroy(this.gameObject,1);
+    }
+
     void OnTriggerEnter2D(Collider2D col){
         if (col.gameObject.tag=="Player" && hp<=minimumHp){
             GameController.gameController.addExperience(experienceByDeath);
-            Destroy(this.gameObject);
+            dieEffect();
+            // Destroy(this.gameObject);
         }
 
         

@@ -16,17 +16,7 @@ public class WeaponHit : MonoBehaviour
     }
 
     void Update(){
-        // if (shouldHit){
-        //     foreach (var go in enemyList)
-        //     {
-        //         EnemyBehaiviour enemyB= go.GetComponent<EnemyBehaiviour>();
-        //         if (enemyB.hp-hitPointsPerHit*Time.deltaTime<=0) enemyList.Remove(go);
-        //         enemyB.hitEnemy(hitPointsPerHit * Time.deltaTime);
-        //     }
-
-        //     // shouldHit=false;
-        //     // Invoke("setShouldHitTrue", 1);
-        // }
+        transform.localPosition= new Vector3(3,0,0);
     }
 
     // void OnTriggerEnter2D(Collider2D col){

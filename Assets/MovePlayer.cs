@@ -11,8 +11,9 @@ public class MovePlayer : MonoBehaviour
     [SerializeField] private FieldOfView fieldOfView;
 
     public AudioClip stepSound;
-    AudioSource audioSource;
     bool canReproduceStep = true;
+
+    AudioSource audioSource;
 
     void setCanReproduceStep(){
         canReproduceStep=true;
