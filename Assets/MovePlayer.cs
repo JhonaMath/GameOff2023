@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -32,6 +33,14 @@ public class MovePlayer : MonoBehaviour
     public float velocidad; //Setted from GameController
 
     Animator animator;
+
+    bool resultUseStick;
+
+    void setResultUseStickFalse(){
+        resultUseStick=false;
+    }
+
+    bool isAnimatingHit=false;
     
 
     void Start(){
@@ -87,8 +96,13 @@ public class MovePlayer : MonoBehaviour
         if (Input.GetMouseButtonDown(0)) GameController.gameController.useFov();
         else if (Input.GetMouseButtonUp(0)) GameController.gameController.stopUsingFov();
 
-        if (Input.GetMouseButtonDown(1)){ 
-            GameController.gameController.useStick();
+        if (Input.GetMouseButtonDown(1) && !resultUseStick){ 
+            GameController.gameController.useStick(ref resultUseStick);
+
+            if (resultUseStick){
+                Invoke("setResultUseStickFalse", 0.4f);
+            }
+            
         }
     
         Vector3 posicionMouse = Input.mousePosition;
@@ -112,11 +126,35 @@ public class MovePlayer : MonoBehaviour
 
     }
 
-    void OnTriggerStay2D(Collider2D col){
-            Debug.Log("TE PEGUE PUTOOOOO");
+IEnumerator hitAnimation()
+    {   
+        if (!isAnimatingHit){
+        
+            isAnimatingHit=true;
+        
+            sprite.color = new Color(255, 0,0);
+            yield return new WaitForSeconds(0.2f);
+            
+            sprite.color = Color.white;
+            yield return new WaitForSeconds(0.2f);
 
-        if (col.gameObject.tag == "Enemy"){
+            sprite.color = new Color(255, 0,0);
+            yield return new WaitForSeconds(0.2f);
+            
+            sprite.color = Color.white;
+            yield return new WaitForSeconds(0.2f);
+
+            sprite.color = Color.white;
+            isAnimatingHit=false;
+        }
+    }
+
+    void OnTriggerStay2D(Collider2D col){
+        
+        if (col.gameObject.tag == "Enemy" && !resultUseStick){
             life-=1*Time.deltaTime; //TODO: Agregar el daño del enemigo aca
+            StartCoroutine(hitAnimation());
+
 
         }
     }

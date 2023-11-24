@@ -224,7 +224,10 @@ public class GameController : MonoBehaviour
     void deactiveExpansionWeapon(){
         expansionWeapon.SetActive(false);
     }
-    public void useStick(){
+    public void useStick(ref bool result){
+        
+        result=expansionWeaponCD<=0 && fov != null;
+
         if (expansionWeaponCD<=0 && fov != null){
             expansionWeapon.SetActive(true);
             expansionWeaponCD=playerStats.cdExplosion;
@@ -367,40 +370,40 @@ public class GameController : MonoBehaviour
         switch (type){
             case 0:
                 return "Life++";
-            break;
+            
            case 1:
                 return "Reg.Life++";
-            break;
+            
             case 2:
                 return "Mana++";
-            break;
+            
             case 3:
                 return "Reg.Mana++";
-            break;
+            
             case 4:
                 return "Vel++";
-            break;
+            
             case 5:
                 return "Range Magic++";
-            break;
+            
             case 6:
                 return "Magic Power++"; //dmgWeapon
-            break;
+            
             case 7:
                 return "Range Explosion++";
-            break;
+            
             case 8:
                 return "CD Explosion--";
-            break;
+            
             case 9:
                 return "Str Explosion++";
-            break;
+            
             case 10:
                 return "Experience Multiplier";
-            break;
+            
             case 11:
                 return "Magic Cost--";
-            break;
+            
         }
 
 
@@ -414,52 +417,52 @@ public class GameController : MonoBehaviour
             case 0:
                 // return "Life: \n+" + (lvlStats[(int)playerStatsLvl.life+1].life - playerStats.life);
                 return "Life: \n+" + (int)(lvlStats[(int)playerStatsLvl.life+1].life*100/playerStats.life-100) + "%";
-            break;
+            
            case 1:
                 // return "Reg.Life: \n+" + (lvlStats[(int)playerStatsLvl.regLife+1].regLife - playerStats.regLife);
                 return "Reg.Life: \n+" + (int)(lvlStats[(int)playerStatsLvl.regLife+1].regLife*100/playerStats.regLife-100) + "%";
-            break;
+            
             case 2:
                 // return "Mana: \n+" + (lvlStats[(int)playerStatsLvl.mana+1].mana - playerStats.mana);
                 return "Mana: \n+" + (int)(lvlStats[(int)playerStatsLvl.mana+1].mana*100/playerStats.mana-100) + "%";
-            break;
+            
             case 3:
                 // return "Reg.Mana: \n+" + (lvlStats[(int)playerStatsLvl.regMana+1].regMana - playerStats.regMana);;
                 return "Reg.Mana: \n+" + (int)(lvlStats[(int)playerStatsLvl.regMana+1].regMana*100/playerStats.regMana-100) + "%";
-            break;
+            
             case 4:
                 // return "Velocity: \n+" + (lvlStats[(int)playerStatsLvl.velocity+1].velocity - playerStats.velocity);
                 return "Velocity: \n+" + (int)(lvlStats[(int)playerStatsLvl.velocity+1].velocity*100/playerStats.velocity-100) + "%";
-            break;
+            
             case 5:
                 // return "Range Magic: \n+" + (lvlStats[(int)playerStatsLvl.rangeWeapon+1].rangeWeapon - playerStats.rangeWeapon);
                 return "Range Magic: \n+" + (int)(lvlStats[(int)playerStatsLvl.rangeWeapon+1].rangeWeapon*100/playerStats.rangeWeapon-100) + "%";
-            break;
+            
             case 6:
                 // return "Magic Power: \n+" + (lvlStats[(int)playerStatsLvl.dmgWeapon+1].dmgWeapon - playerStats.dmgWeapon);
                 return "Magic Power: \n+" + (int)(lvlStats[(int)playerStatsLvl.dmgWeapon+1].dmgWeapon*100/playerStats.dmgWeapon-100) + "%";
-            break;
+            
             case 7:
                 // return "Range Explosion: \n+" + (lvlStats[(int)playerStatsLvl.rangeExplosion+1].rangeExplosion - playerStats.rangeExplosion);
                 return "Range Explosion: \n+" + (int)(lvlStats[(int)playerStatsLvl.rangeExplosion+1].rangeExplosion*100/playerStats.rangeExplosion-100) + "%";
-            break;
+            
             case 8:
                 // return "CD Explosion: \n-" + (playerStats.cdExplosion-lvlStats[(int)playerStatsLvl.cdExplosion+1].cdExplosion);
                 return "CD Explosion: \n-" + (int)(playerStats.cdExplosion*100/lvlStats[(int)playerStatsLvl.cdExplosion+1].cdExplosion-100) + "%";
-            break;
+            
             case 9:
                 // return "Str Explosion: \n+" + (lvlStats[(int)playerStatsLvl.velocity+1].velocity - playerStats.velocity);
                 return "Str Explosion: \n+" + (int)(lvlStats[(int)playerStatsLvl.velocity+1].velocity*100/playerStats.velocity-100) + "%";
-            break;
+            
             case 10:
                 // return "Experience Multiplier: \n+" + (lvlStats[(int)playerStatsLvl.expMultiplier+1].expMultiplier - playerStats.expMultiplier);
                 return "Experience Multiplier: \n+" + (int)(lvlStats[(int)playerStatsLvl.expMultiplier+1].expMultiplier*100/playerStats.expMultiplier-100) + "%";
-            break;
-            break;
+            
+            
             case 11:
                 // return "Magic Cost: \n-" + (playerStats.weaponCost-lvlStats[(int)playerStatsLvl.weaponCost+1].weaponCost);
                 return "Magic Cost: \n-" + (int)(playerStats.weaponCost*100/lvlStats[(int)playerStatsLvl.weaponCost+1].weaponCost-100) + "%";
-            break;
+            
         }
 
 
@@ -471,40 +474,40 @@ public class GameController : MonoBehaviour
         switch (type){
             case 0:
                 return playerStatsLvl.life;
-            break;
+            
            case 1:
                 return playerStatsLvl.regLife;
-            break;
+            
             case 2:
                 return playerStatsLvl.mana;
-            break;
+            
             case 3:
                 return playerStatsLvl.regMana;
-            break;
+            
             case 4:
                 return playerStatsLvl.velocity;
-            break;
+            
             case 5:
                 return playerStatsLvl.rangeWeapon;
-            break;
+            
             case 6:
                 return playerStatsLvl.dmgWeapon;
-            break;
+            
             case 7:
                 return playerStatsLvl.rangeExplosion;
-            break;
+            
             case 8:
                 return playerStatsLvl.cdExplosion;
-            break;
+            
             case 9:
                 return playerStatsLvl.strExplosion;
-            break;
+            
             case 10:
                 return playerStatsLvl.expMultiplier;
-            break;
+            
             case 11:
                 return playerStatsLvl.weaponCost;
-            break;
+            
         }
 
 
