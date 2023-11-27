@@ -10,13 +10,13 @@ GameObject:
   m_Component:
   - component: {fileID: 555068959057709039}
   - component: {fileID: 2598651486416181508}
-  - component: {fileID: 1292833978254833673}
   - component: {fileID: 7874382274603380960}
   - component: {fileID: 3528396032266761944}
   - component: {fileID: 2517854139694369961}
   - component: {fileID: 2067946125748524145}
+  - component: {fileID: 5092055905983548797}
   m_Layer: 0
-  m_Name: Enemy
+  m_Name: Enemy4
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -81,7 +81,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 8dfc93a197e8745b2805ed63f5b184d9, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.6984744, g: 0, b: 0.8773585, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -91,25 +91,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &1292833978254833673
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3477572672702246120}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a186bb96c337041579343c088d4024ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  velocidad: 1
-  hp: 4
-  minimumHp: 2
-  experienceByDeath: 1
-  shrinkFactor: 0.2
-  dieSoundEffect: {fileID: 8300000, guid: 26e4996d0f72642be9440392c24547ab, type: 3}
-  bloodSprite: {fileID: 1626414882350239706}
 --- !u!50 &7874382274603380960
 Rigidbody2D:
   serializedVersion: 4
@@ -299,6 +280,27 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &5092055905983548797
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3477572672702246120}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b977925f5d3f433e8c48bb84db67550, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  velocidad: 2
+  hp: 8
+  minimumHp: 2
+  experienceByDeath: 1.4
+  shrinkFactor: 0.05
+  dieSoundEffect: {fileID: 8300000, guid: 26e4996d0f72642be9440392c24547ab, type: 3}
+  bloodSprite: {fileID: 1626414882350239706}
+  angerAfterSec: 3
+  angerCD: 15
 --- !u!1 &6348986841083313179
 GameObject:
   m_ObjectHideFlags: 0

@@ -66,6 +66,9 @@ public class GameController : MonoBehaviour
 
     // Enemy Prefabs
     public GameObject enemy1Prefab; 
+    public GameObject enemy2Prefab; 
+    public GameObject enemy3Prefab; 
+    public GameObject enemy4Prefab; 
 
 
     //Weapons
@@ -98,8 +101,6 @@ public class GameController : MonoBehaviour
 
     public Text Card2Title;
     public Text Card2Description;
-
-
 
        void Start()
     {
@@ -216,9 +217,29 @@ public class GameController : MonoBehaviour
     void CreateEnemy(){
 
         int spanwSel=Random.Range(0, spawnAreaControllers.Count);
+        int enemyType = Random.Range(0,3);
+
+        GameObject enemyPrefab=null;
+
+        switch(enemyType){
+            case 0: 
+                enemyPrefab=enemy1Prefab;
+                break;
+            case 1:
+                enemyPrefab = enemy2Prefab;
+                break;
+            case 2:
+                enemyPrefab = enemy3Prefab;
+                break;
+            case 3:
+                enemyPrefab = enemy4Prefab;
+                break;
+        }
+
+        enemyPrefab=enemy4Prefab;
 
         if (spanwSel>=0)
-            spawnAreaControllers[spanwSel].SpawnEnemy(enemy1Prefab);
+            spawnAreaControllers[spanwSel].SpawnEnemy(enemyPrefab);
     }
 
     void deactiveExpansionWeapon(){
