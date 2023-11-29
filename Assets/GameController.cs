@@ -27,11 +27,12 @@ public struct CardData{
     int type;
     string title;
     string description;
-
-
 }
 public class GameController : MonoBehaviour
 {
+
+    public AudioSource SoundGlobalSource;
+    public AudioClip bossFightSong;
 
     //PLayer Stats;
     public PlayerStats playerStats;
@@ -42,6 +43,21 @@ public class GameController : MonoBehaviour
     public MovePlayer playerMove;
 
     public static GameController gameController;
+
+    public float bossLife=40*4;
+
+    public bool isBossFight = false;
+
+    public GameObject bossPart1;
+    public GameObject bossPart2;
+    public GameObject bossPart3;
+    public GameObject bossPart4;
+
+    public GameObject BossText;
+    public GameObject BossBar;
+    Image BossBarReal;
+    public GameObject BossBarParent;
+
 
     #region UI
     public Text timerText;
@@ -69,10 +85,12 @@ public class GameController : MonoBehaviour
     public GameObject enemy2Prefab; 
     public GameObject enemy3Prefab; 
     public GameObject enemy4Prefab; 
+    public GameObject gigantEnemy1Prefab; 
 
 
     //Weapons
     public GameObject fov;
+    Vector3 initialFovScale;
     private float mana = 10.0f; //This is the mana
     private float maxMana = 10.0f;
     public GameObject manaBar;
@@ -102,11 +120,29 @@ public class GameController : MonoBehaviour
     public Text Card2Title;
     public Text Card2Description;
 
+
+    void StartBossFight(){
+        isBossFight=true;
+        bossPart1.SetActive(true);
+        bossPart2.SetActive(true);
+        bossPart3.SetActive(true);
+        bossPart4.SetActive(true);
+
+        BossBar.SetActive(true);
+        BossText.SetActive(true);
+        BossBarParent.SetActive(true);
+
+        SoundGlobalSource.clip=bossFightSong;
+        SoundGlobalSource.Play();
+
+    }
+
        void Start()
     {
         gameController=this.GetComponent<GameController>();
 
         InvokeRepeating("CreateEnemy", 1, 2);
+        Invoke("StartBossFight", 600);
         // InvokeRepeating("CreateEnemy", 1, 1);
 
         audioSource= GetComponent<AudioSource>();
@@ -114,6 +150,10 @@ public class GameController : MonoBehaviour
         manaBarReal=manaBar.GetComponent<Image>();
         
         expBarReal= expBar.GetComponent<Image>();
+
+        BossBarReal=BossBar.GetComponent<Image>();
+
+        initialFovScale=fov.transform.localScale;
 
         //Initial Lvls
         playerStatsLvl.life = 0;
@@ -153,6 +193,9 @@ public class GameController : MonoBehaviour
 
         manaBarReal.fillAmount=mana/maxMana;
         expBarReal.fillAmount=experience/experienceNextLevel;
+
+        BossBarReal.fillAmount=bossLife/(40*4);
+
         lvlText.text="Lvl. " + currentLevel;
         
     }
@@ -197,6 +240,8 @@ public class GameController : MonoBehaviour
         playerStats.expMultiplier = lvlStats[(int)playerStatsLvl.expMultiplier ].expMultiplier;
         playerStats.weaponCost = lvlStats[(int)playerStatsLvl.weaponCost].weaponCost;
 
+        fov.transform.localScale=initialFovScale*lvlStats[(int)playerStatsLvl.rangeWeapon].rangeWeapon;
+
 
 
         playerMove.life=playerStats.life;
@@ -215,11 +260,14 @@ public class GameController : MonoBehaviour
     }
 
     void CreateEnemy(){
+        if (isBossFight) return;
+
 
         int spanwSel=Random.Range(0, spawnAreaControllers.Count);
-        int enemyType = Random.Range(0,3);
+        int enemyType = (int)time / 60;
 
         GameObject enemyPrefab=null;
+
 
         switch(enemyType){
             case 0: 
@@ -234,12 +282,18 @@ public class GameController : MonoBehaviour
             case 3:
                 enemyPrefab = enemy4Prefab;
                 break;
+            case 4:
+                enemyPrefab = gigantEnemy1Prefab;
+                break;
         }
-
-        enemyPrefab=enemy4Prefab;
 
         if (spanwSel>=0)
             spawnAreaControllers[spanwSel].SpawnEnemy(enemyPrefab);
+
+        if (time>180){
+            spanwSel=Random.Range(0, spawnAreaControllers.Count);
+            enemyType = Random.Range(0, 5);;
+        }
     }
 
     void deactiveExpansionWeapon(){
@@ -270,6 +324,25 @@ public class GameController : MonoBehaviour
     }
 
     public void addExperience(float value){
+
+        float sumLvl = playerStatsLvl.life +
+        playerStatsLvl.regLife +
+        playerStatsLvl.mana +
+        playerStatsLvl.regMana +
+        playerStatsLvl.velocity +
+        playerStatsLvl.rangeWeapon +
+        playerStatsLvl.dmgWeapon +
+        playerStatsLvl.rangeExplosion +
+        playerStatsLvl.strExplosion +
+        playerStatsLvl.cdExplosion +
+        playerStatsLvl.expMultiplier +
+        playerStatsLvl.weaponCost;
+
+        if (sumLvl/4==12) {//Guarda para evitar el freeze
+            experience=experienceNextLevel;
+            return;
+        }
+
         experience+=value*playerStats.expMultiplier;
         if (experienceNextLevel<=experience){
             //TODO: LevelUp Animation
@@ -290,6 +363,7 @@ public class GameController : MonoBehaviour
     }
 
     public void levelUp(){
+
         do{
             Card1Type = Random.Range(0,11);
         }while(getStatLvlByType(Card1Type)==4);
@@ -311,9 +385,9 @@ public class GameController : MonoBehaviour
     void initializeLvlPlayerStats(){
         //Initial Values - Lvl1
         lvlStats[0].life = 5;
-        lvlStats[0].regLife = 0.01f;
+        lvlStats[0].regLife = 0.2f;
         lvlStats[0].mana = 3;
-        lvlStats[0].regMana = 0.1f;
+        lvlStats[0].regMana = 0.4f;
         lvlStats[0].velocity = 3;
         lvlStats[0].rangeWeapon = 1;
         lvlStats[0].dmgWeapon = 2;
@@ -325,11 +399,11 @@ public class GameController : MonoBehaviour
 
         //Lvl 2
         lvlStats[1].life = 7;
-        lvlStats[1].regLife = 0.02f;
+        lvlStats[1].regLife = 0.3f;
         lvlStats[1].mana = 4;
-        lvlStats[1].regMana = 0.2f;
+        lvlStats[1].regMana = 0.5f;
         lvlStats[1].velocity = 3.75f;
-        lvlStats[1].rangeWeapon = 1;//TODO: Arreglar esto
+        lvlStats[1].rangeWeapon = 1.3f;//TODO: Arreglar esto
         lvlStats[1].dmgWeapon = 2.5f;
         lvlStats[1].rangeExplosion = 220;
         lvlStats[1].strExplosion = 8.5f;
@@ -339,11 +413,11 @@ public class GameController : MonoBehaviour
 
         //Lvl 3
         lvlStats[2].life = 9;
-        lvlStats[2].regLife = 0.03f;
+        lvlStats[2].regLife = 0.4f;
         lvlStats[2].mana = 5;
-        lvlStats[2].regMana = 0.3f;
+        lvlStats[2].regMana = 0.7f;
         lvlStats[2].velocity = 4.5f;
-        lvlStats[2].rangeWeapon = 1; //TODO: Arreglar esto
+        lvlStats[2].rangeWeapon = 1.6f; //TODO: Arreglar esto
         lvlStats[2].dmgWeapon = 3f;
         lvlStats[2].rangeExplosion = 240;
         lvlStats[2].strExplosion = 9f;
@@ -353,11 +427,11 @@ public class GameController : MonoBehaviour
 
         //Lvl 4
         lvlStats[3].life = 12;
-        lvlStats[3].regLife = 0.04f;
+        lvlStats[3].regLife = 0.5f;
         lvlStats[3].mana = 5.5f;
-        lvlStats[3].regMana = 0.35f;
+        lvlStats[3].regMana = 0.8f;
         lvlStats[3].velocity = 5.25f;
-        lvlStats[3].rangeWeapon = 1; //TODO: Arreglar esto
+        lvlStats[3].rangeWeapon = 2f; //TODO: Arreglar esto
         lvlStats[3].dmgWeapon = 3.5f;
         lvlStats[3].rangeExplosion = 260;
         lvlStats[3].strExplosion = 9.3f;
@@ -367,15 +441,15 @@ public class GameController : MonoBehaviour
 
         //Lvl 5 - Max LVL
         lvlStats[4].life = 15;
-        lvlStats[4].regLife = 0.06f;
+        lvlStats[4].regLife = 0.6f;
         lvlStats[4].mana = 6f;
-        lvlStats[4].regMana = 0.5f;
+        lvlStats[4].regMana = 0.9f;
         lvlStats[4].velocity = 6f;
-        lvlStats[4].rangeWeapon = 1; //TODO: Arreglar esto
+        lvlStats[4].rangeWeapon = 2.3f; //TODO: Arreglar esto
         lvlStats[4].dmgWeapon = 4f;
         lvlStats[4].rangeExplosion = 280;
         lvlStats[4].strExplosion = 10f;
-        lvlStats[4].cdExplosion = 3;
+        lvlStats[4].cdExplosion = 2;
         lvlStats[4].expMultiplier = 2f;
         lvlStats[4].weaponCost = 0.1f;
     }

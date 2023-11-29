@@ -7,6 +7,8 @@ TagManager:
   - Enemy
   - Weapon
   - Spawn
+  - Bullet
+  - Expansive
   layers:
   - Default
   - TransparentFX

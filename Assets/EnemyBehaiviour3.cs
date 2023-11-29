@@ -33,6 +33,9 @@ public class EnemyBehaiviour3 : MonoBehaviour
 
     public GameObject teleportEffect;
 
+    Animator animator;
+
+
     public void hitEnemy(float ammount){
         if (minimumHp<=hp){
             hp-=ammount;
@@ -56,6 +59,9 @@ public class EnemyBehaiviour3 : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
         initialVelocity=velocidad;
         
+        animator = GetComponent<Animator>();
+
+        
         // InvokeRepeating("addLife", 0.5f, 0.5f);
     }
 
@@ -74,8 +80,10 @@ public class EnemyBehaiviour3 : MonoBehaviour
         {
             Vector2 direccion;
 
-            if (hp<=minimumHp)
+            if (hp<=minimumHp){
+                animator.SetBool("is_mini",true);
                 direccion = (-jugador.position + transform.position).normalized;
+            }
             else 
                 direccion = (jugador.position - transform.position).normalized;           
             
@@ -128,8 +136,6 @@ public class EnemyBehaiviour3 : MonoBehaviour
             canWarp=false;
             StartCoroutine(reloadWarp());
         }
-
-        
     }
 
     void OnTriggerStay2D(Collider2D col){
@@ -154,6 +160,10 @@ public class EnemyBehaiviour3 : MonoBehaviour
                 canWarp=false;
                 StartCoroutine(reloadWarp());
             }
+        } else if (col.gameObject.tag=="Player" && hp<=minimumHp){
+            GameController.gameController.addExperience(experienceByDeath);
+            dieEffect();
+            // Destroy(this.gameObject);
         }
     }
 

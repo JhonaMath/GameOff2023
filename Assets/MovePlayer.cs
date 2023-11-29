@@ -78,7 +78,8 @@ public class MovePlayer : MonoBehaviour
         Vector3 movimiento = new Vector3(movimientoHorizontal, movimientoVertical, 0.0f);
 
         // Aplicar el movimiento al objeto
-        transform.Translate(movimiento.normalized * velocidad * Time.deltaTime);
+        if (life>0)
+            transform.Translate(movimiento.normalized * velocidad * Time.deltaTime);
 
 
         if (movimientoHorizontal>0) {
@@ -111,10 +112,12 @@ public class MovePlayer : MonoBehaviour
 
         //Evaluar si mori
         if (life<=0) {
+            life=-1;
             GameController.gameController.GameOver();
             //Loose effect music
             if (transform.localScale.x>0)
                 transform.localScale -= Vector3.one * 0.5f * Time.deltaTime;
+        
         }
 
         if (life<maxLife)
@@ -156,6 +159,14 @@ IEnumerator hitAnimation()
             StartCoroutine(hitAnimation());
 
 
+        }
+    }
+
+    void OnTriggerEnter2D(Collider2D col){
+        if (col.gameObject.tag == "Bullet"){
+            Destroy(col.gameObject);
+            life-=1;
+            StartCoroutine(hitAnimation());
         }
     }
 }

@@ -26,6 +26,8 @@ public class EnemyBehaiviour : MonoBehaviour
     Rigidbody2D rb;
     SpriteRenderer sprite;
 
+    Animator animator;
+
     public SpriteRenderer bloodSprite;
 
     public void hitEnemy(float ammount){
@@ -50,6 +52,8 @@ public class EnemyBehaiviour : MonoBehaviour
 
         audioSource = GetComponent<AudioSource>();
         
+        animator = GetComponent<Animator>();
+
         // InvokeRepeating("addLife", 0.5f, 0.5f);
     }
 
@@ -68,8 +72,11 @@ public class EnemyBehaiviour : MonoBehaviour
         {
             Vector2 direccion;
 
-            if (hp<=minimumHp)
+            if (hp<=minimumHp){
+
+                animator.SetBool("is_mini",true);
                 direccion = (-jugador.position + transform.position).normalized;
+            }
             else 
                 direccion = (jugador.position - transform.position).normalized;           
             
@@ -115,5 +122,10 @@ public class EnemyBehaiviour : MonoBehaviour
 
         if (col.gameObject.tag=="Weapon")
             this.hitEnemy(GameController.gameController.playerStats.dmgWeapon * Time.deltaTime);
+        else if (col.gameObject.tag=="Player" && hp<=minimumHp){
+            GameController.gameController.addExperience(experienceByDeath);
+            dieEffect();
+            // Destroy(this.gameObject);
+        }
     }
 }

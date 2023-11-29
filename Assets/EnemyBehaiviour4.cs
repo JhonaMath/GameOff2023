@@ -39,6 +39,9 @@ public class EnemyBehaiviour4 : MonoBehaviour
 
     Vector3 angerDirection;
 
+    Animator animator;
+
+
     public void hitEnemy(float ammount){
         if (minimumHp<=hp){
             hp-=ammount;
@@ -62,6 +65,9 @@ public class EnemyBehaiviour4 : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
         initialVelocity=velocidad;
         InvokeRepeating("StartAnger",angerCD, angerCD);
+
+        animator = GetComponent<Animator>();
+
         
         // InvokeRepeating("addLife", 0.5f, 0.5f);
     }
@@ -82,8 +88,11 @@ public class EnemyBehaiviour4 : MonoBehaviour
             Vector2 direccion;
 
             if (!preparingAnger && !isAnger){
-                if (hp<=minimumHp)
+                if (hp<=minimumHp){
+                    Debug.Log("CORRE PENDEJO!!");
+                    animator.SetBool("is_mini",true);
                     direccion = (-jugador.position + transform.position).normalized;
+                }
                 else 
                     direccion = (jugador.position - transform.position).normalized;           
             
@@ -99,8 +108,11 @@ public class EnemyBehaiviour4 : MonoBehaviour
             if (direccion.x<0) sprite.flipX=true;
             else sprite.flipX=false;
             // rb.velocity+=direccion * velocidad;
-
+            if (preparingAnger) sprite.color = new Color(255,0,0);
+            else sprite.color=Color.white;
         }
+
+        
 
         if (rb.velocity.sqrMagnitude!=0){
             rb.velocity-= rb.velocity*Time.deltaTime;
@@ -135,11 +147,16 @@ public class EnemyBehaiviour4 : MonoBehaviour
 
         if (col.gameObject.tag=="Weapon"){
             this.hitEnemy(GameController.gameController.playerStats.dmgWeapon * Time.deltaTime);
+        }else if (col.gameObject.tag=="Player" && hp<=minimumHp){
+            GameController.gameController.addExperience(experienceByDeath);
+            dieEffect();
+            // Destroy(this.gameObject);
         }
     }
 
     void StartAnger(){
-        StartCoroutine(preapareAngerRoutine());
+        if (hp>minimumHp)
+                StartCoroutine(preapareAngerRoutine());
     }
     IEnumerator preapareAngerRoutine(){
         preparingAnger=true;
@@ -155,8 +172,5 @@ public class EnemyBehaiviour4 : MonoBehaviour
         velocidad=velocidad/2.5f;
         isAnger=false;
         preparingAnger=false;
-
-
-
     }
 }
