@@ -43,5 +43,6 @@ public class BulletBehaiviour : MonoBehaviour
     void OnTriggerEnter2D(Collider2D col){
         // Debug.Log("CHOQUEEE");
         if (col.gameObject.tag=="Expansive") Destroy(this.gameObject);
+        else if (col.gameObject.tag=="Enemy")Destroy(col.gameObject);
     }
 }

@@ -70,6 +70,7 @@ public class GameController : MonoBehaviour
     public GameObject pauseUI;
 
     public GameObject gameOverUI;
+    public Text gameOverUIText;
 
     public GameObject lvlUpUI;
 
@@ -139,10 +140,11 @@ public class GameController : MonoBehaviour
 
        void Start()
     {
+
         gameController=this.GetComponent<GameController>();
 
         InvokeRepeating("CreateEnemy", 1, 2);
-        Invoke("StartBossFight", 600);
+        Invoke("StartBossFight", 300);
         // InvokeRepeating("CreateEnemy", 1, 1);
 
         audioSource= GetComponent<AudioSource>();
@@ -197,6 +199,11 @@ public class GameController : MonoBehaviour
         BossBarReal.fillAmount=bossLife/(40*4);
 
         lvlText.text="Lvl. " + currentLevel;
+
+        if (bossLife<=0){
+            gameOverUI.SetActive(true);
+            gameOverUIText.text = "Thanks for playing!"
+        }
         
     }
 
@@ -264,7 +271,7 @@ public class GameController : MonoBehaviour
 
 
         int spanwSel=Random.Range(0, spawnAreaControllers.Count);
-        int enemyType = (int)time / 60;
+        int enemyType = ((int)time / 45) % 5;
 
         GameObject enemyPrefab=null;
 
@@ -286,13 +293,54 @@ public class GameController : MonoBehaviour
                 enemyPrefab = gigantEnemy1Prefab;
                 break;
         }
+        // enemyPrefab=enemy4Prefab;
 
         if (spanwSel>=0)
             spawnAreaControllers[spanwSel].SpawnEnemy(enemyPrefab);
 
-        if (time>180){
+        if (time>225){
+
+             switch(enemyType){
+            case 0: 
+                enemyPrefab=enemy1Prefab;
+                break;
+            case 1:
+                enemyPrefab = enemy2Prefab;
+                break;
+            case 2:
+                enemyPrefab = enemy3Prefab;
+                break;
+            case 3:
+                enemyPrefab = enemy4Prefab;
+                break;
+            case 4:
+                enemyPrefab = gigantEnemy1Prefab;
+                break;
+        }
             spanwSel=Random.Range(0, spawnAreaControllers.Count);
-            enemyType = Random.Range(0, 5);;
+            enemyType = Random.Range(0, 5);
+            spawnAreaControllers[spanwSel].SpawnEnemy(enemyPrefab);
+
+             switch(enemyType){
+            case 0: 
+                enemyPrefab=enemy1Prefab;
+                break;
+            case 1:
+                enemyPrefab = enemy2Prefab;
+                break;
+            case 2:
+                enemyPrefab = enemy3Prefab;
+                break;
+            case 3:
+                enemyPrefab = enemy4Prefab;
+                break;
+            case 4:
+                enemyPrefab = gigantEnemy1Prefab;
+                break;
+        }
+            spanwSel=Random.Range(0, spawnAreaControllers.Count);
+            enemyType = Random.Range(0, 5);
+            spawnAreaControllers[spanwSel].SpawnEnemy(enemyPrefab);
         }
     }
 
@@ -385,7 +433,7 @@ public class GameController : MonoBehaviour
     void initializeLvlPlayerStats(){
         //Initial Values - Lvl1
         lvlStats[0].life = 5;
-        lvlStats[0].regLife = 0.2f;
+        lvlStats[0].regLife = 0.02f;
         lvlStats[0].mana = 3;
         lvlStats[0].regMana = 0.4f;
         lvlStats[0].velocity = 3;
@@ -399,11 +447,11 @@ public class GameController : MonoBehaviour
 
         //Lvl 2
         lvlStats[1].life = 7;
-        lvlStats[1].regLife = 0.3f;
+        lvlStats[1].regLife = 0.04f;
         lvlStats[1].mana = 4;
         lvlStats[1].regMana = 0.5f;
         lvlStats[1].velocity = 3.75f;
-        lvlStats[1].rangeWeapon = 1.3f;//TODO: Arreglar esto
+        lvlStats[1].rangeWeapon = 1.1f;//TODO: Arreglar esto
         lvlStats[1].dmgWeapon = 2.5f;
         lvlStats[1].rangeExplosion = 220;
         lvlStats[1].strExplosion = 8.5f;
@@ -413,11 +461,11 @@ public class GameController : MonoBehaviour
 
         //Lvl 3
         lvlStats[2].life = 9;
-        lvlStats[2].regLife = 0.4f;
+        lvlStats[2].regLife = 0.06f;
         lvlStats[2].mana = 5;
         lvlStats[2].regMana = 0.7f;
         lvlStats[2].velocity = 4.5f;
-        lvlStats[2].rangeWeapon = 1.6f; //TODO: Arreglar esto
+        lvlStats[2].rangeWeapon = 1.2f; //TODO: Arreglar esto
         lvlStats[2].dmgWeapon = 3f;
         lvlStats[2].rangeExplosion = 240;
         lvlStats[2].strExplosion = 9f;
@@ -427,11 +475,11 @@ public class GameController : MonoBehaviour
 
         //Lvl 4
         lvlStats[3].life = 12;
-        lvlStats[3].regLife = 0.5f;
+        lvlStats[3].regLife = 0.08f;
         lvlStats[3].mana = 5.5f;
         lvlStats[3].regMana = 0.8f;
         lvlStats[3].velocity = 5.25f;
-        lvlStats[3].rangeWeapon = 2f; //TODO: Arreglar esto
+        lvlStats[3].rangeWeapon = 1.4f; //TODO: Arreglar esto
         lvlStats[3].dmgWeapon = 3.5f;
         lvlStats[3].rangeExplosion = 260;
         lvlStats[3].strExplosion = 9.3f;
@@ -441,11 +489,11 @@ public class GameController : MonoBehaviour
 
         //Lvl 5 - Max LVL
         lvlStats[4].life = 15;
-        lvlStats[4].regLife = 0.6f;
+        lvlStats[4].regLife = 0.1f;
         lvlStats[4].mana = 6f;
         lvlStats[4].regMana = 0.9f;
         lvlStats[4].velocity = 6f;
-        lvlStats[4].rangeWeapon = 2.3f; //TODO: Arreglar esto
+        lvlStats[4].rangeWeapon = 1.6f; //TODO: Arreglar esto
         lvlStats[4].dmgWeapon = 4f;
         lvlStats[4].rangeExplosion = 280;
         lvlStats[4].strExplosion = 10f;

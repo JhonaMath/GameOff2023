@@ -103,7 +103,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a186bb96c337041579343c088d4024ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  velocidad: 1
+  velocidad: 2
   hp: 4
   minimumHp: 2
   experienceByDeath: 1

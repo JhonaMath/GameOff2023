@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using Unity.VisualScripting;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class EnemyBehaiviour4 : MonoBehaviour
@@ -89,7 +88,6 @@ public class EnemyBehaiviour4 : MonoBehaviour
 
             if (!preparingAnger && !isAnger){
                 if (hp<=minimumHp){
-                    Debug.Log("CORRE PENDEJO!!");
                     animator.SetBool("is_mini",true);
                     direccion = (-jugador.position + transform.position).normalized;
                 }

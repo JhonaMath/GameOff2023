@@ -5,6 +5,7 @@ using UnityEngine;
 public class EnemyBehaiviour : MonoBehaviour
 {
     public float velocidad = 3.0f; // Velocidad de movimiento del enemigo
+    float initialVelocidad;
 
     // public float lifePerSecond = 0.5f;
     public float hp=10;
@@ -53,6 +54,8 @@ public class EnemyBehaiviour : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
         
         animator = GetComponent<Animator>();
+
+        initialVelocidad=velocidad;
 
         // InvokeRepeating("addLife", 0.5f, 0.5f);
     }
@@ -120,12 +123,20 @@ public class EnemyBehaiviour : MonoBehaviour
 
     void OnTriggerStay2D(Collider2D col){
 
-        if (col.gameObject.tag=="Weapon")
-            this.hitEnemy(GameController.gameController.playerStats.dmgWeapon * Time.deltaTime);
+        if (col.gameObject.tag=="Weapon"){
+             this.hitEnemy(GameController.gameController.playerStats.dmgWeapon * Time.deltaTime);
+             velocidad=initialVelocidad*0.75f;
+        }
         else if (col.gameObject.tag=="Player" && hp<=minimumHp){
             GameController.gameController.addExperience(experienceByDeath);
             dieEffect();
             // Destroy(this.gameObject);
         }
+    }
+
+    void onTriggerExit2D(Collider2D col){
+        if (col.gameObject.tag=="Weapon")
+            velocidad=initialVelocidad;
+
     }
 }

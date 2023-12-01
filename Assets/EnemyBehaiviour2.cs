@@ -6,6 +6,8 @@ using UnityEngine;
 public class EnemyBehaiviour2 : MonoBehaviour
 {
     public float velocidad = 3.0f; // Velocidad de movimiento del enemigo
+    float initialVelocidad;
+
     float initialVelocity;
     // public float lifePerSecond = 0.5f;
     public float hp=10;
@@ -66,7 +68,7 @@ public class EnemyBehaiviour2 : MonoBehaviour
 
         // transform.localScale = new Vector3(scale, scale);
 
-        if (shouldRun) velocidad=initialVelocity*1.3f;
+        if (shouldRun) velocidad=initialVelocity*1.2f;
         else velocidad=initialVelocity;
 
 
@@ -133,8 +135,11 @@ public class EnemyBehaiviour2 : MonoBehaviour
 
     void OnTriggerStay2D(Collider2D col){
 
-        if (col.gameObject.tag=="Weapon")
+        if (col.gameObject.tag=="Weapon"){
             this.hitEnemy(GameController.gameController.playerStats.dmgWeapon * Time.deltaTime);
+            // velocidad=initialVelocidad*0.75;
+
+        }
         else if (col.gameObject.tag=="Player" && hp<=minimumHp){
             GameController.gameController.addExperience(experienceByDeath);
             dieEffect();
@@ -151,6 +156,7 @@ public class EnemyBehaiviour2 : MonoBehaviour
         if (col.gameObject.tag=="Weapon" && !shouldRun){
             shouldRun=true;
             StartCoroutine(stopRunning());
+            // velocidad=initialVelocidad;
         }
             
 

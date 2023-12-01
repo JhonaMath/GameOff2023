@@ -380,7 +380,7 @@ MonoBehaviour:
   hp: 5
   minimumHp: 2
   experienceByDeath: 2.5
-  shrinkFactor: 0.07
+  shrinkFactor: 0.09
   dieSoundEffect: {fileID: 8300000, guid: 26e4996d0f72642be9440392c24547ab, type: 3}
   bloodSprite: {fileID: 7647879679346913988}
   angerAfterSec: 3
