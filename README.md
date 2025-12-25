@@ -133,7 +133,7 @@ This project is open source and available under the MIT License.
 - **Created by**: JhonaMath
 
 ### Assets
-- **Dungeon Tileset**: 0x72 DungeonTilesetII v1.6
+- **Dungeon Tileset**: 0x72 Dungeon Tileset II v1.6
 - **Character Sprites**: Custom pixel art
 - **Music & Sound**: Boss fight soundtrack and various sound effects
 
