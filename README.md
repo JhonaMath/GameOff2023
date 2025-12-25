@@ -8,7 +8,7 @@
 [![GameOff 2023](https://img.shields.io/badge/GameOff-2023-orange.svg)](https://itch.io/jam/game-off-2023)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-[Play Now (Web)](BuildWeb/index.html) | [Report Bug](../../issues) | [Request Feature](../../issues)
+[Download & Play](../../releases) | [Report Bug](../../issues) | [Request Feature](../../issues)
 
 </div>
 
@@ -63,13 +63,15 @@ The game was developed in **one month** as part of the GameOff 2023 challenge, e
 
 ## 🚀 Getting Started
 
-### Play Online
+### Play the Web Version
 
-The easiest way to play is through the web build:
+The game includes a WebGL build for browser play:
 
-1. Navigate to the `BuildWeb` folder
+1. Navigate to the `BuildWeb` folder in the repository
 2. Open `index.html` in your web browser
 3. Enjoy the game!
+
+> **Note**: For the best experience, use a modern browser like Chrome, Firefox, or Edge. The web build may require hosting on a local server or GitHub Pages to work properly due to browser security restrictions.
 
 ### Play in Unity
 
